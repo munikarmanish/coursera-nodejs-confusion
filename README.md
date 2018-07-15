@@ -40,6 +40,16 @@ Then just clone and run:
 
 4. Send requests to [http://localhost:3000](http://localhost:3000)
 
+### Authentication
+
+Right now, it uses simple username/password authentication using sessions. Use the following API for authentication:
+
+Operation | Method | URL | Body
+--- | --- | --- | ---
+Signup | POST | /users/signup | `{ "username": "abc", "password": "xyz" }`
+Login | POST | /users/login | `{ "username": "abc", "password": "xyz" }`
+Logout | GET | /users/logout |
+
 ## API Endpoints
 
 Endpoint | Supported methods
