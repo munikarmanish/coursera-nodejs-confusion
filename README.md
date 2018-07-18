@@ -35,8 +35,7 @@ Then just clone and run:
 
 3. Start the server
 
-        DEBUG=coursera-nodejs-confusion:* npm start   # debug mode (produces helpful console output)
-        npm start                                     # production mode
+        npm start
 
 4. Send requests to [http://localhost:3000](http://localhost:3000)
 
