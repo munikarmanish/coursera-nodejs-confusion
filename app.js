@@ -6,6 +6,9 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const passport = require('passport');
+// const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/user');
 
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/users');
@@ -36,32 +39,28 @@ app.use(session({
     store: new FileStore(),
 }));
 
+// configure passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use('/', indexRouter);
 app.use('/users', userRouter);
 
 // Authorization middleware
-function auth(req, res, next) {
-    console.log(req.session);
-
-    if (!req.session.user) {
+app.use((req, res, next) => {
+    if (!req.user) {
         const err = new Error('You are not authenticated');
         err.status = 403;
         return next(err);
     } else {
-        if (req.session.user === 'authenticated') {
-            next();
-        } else {
-            const err = new Error('You are not authenticated');
-            err.status = 403;
-            next(err);
-        }
+        next();
     }
-}
-
-app.use(auth);
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
 app.use('/leaders', leaderRouter);
