@@ -41,13 +41,18 @@ Then just clone and run:
 
 ### Authentication
 
-Right now, it uses simple username/password authentication using sessions. Use the following API for authentication:
+Right now, it uses simple JWT-based authenticationUse the following API for authentication:
 
 Operation | Method | URL | Body
 --- | --- | --- | ---
 Signup | POST | /users/signup | `{ "username": "abc", "password": "xyz" }`
 Login | POST | /users/login | `{ "username": "abc", "password": "xyz" }`
-Logout | GET | /users/logout |
+Logout (_not used_) | GET | /users/logout |
+
+When you login, you'll receive a _`token`_ in the response body.
+Put that token in the request header as `Authentication: Bearer <token>` to
+access restricted endpoints. The default expiration time of the tokens in 1 hour.
+You'll have to relogin and obtain new token when the current token expires.
 
 ## API Endpoints
 
@@ -64,12 +69,12 @@ Endpoint | Supported methods
 
 ### Method documentation
 
-Method | Description
---- | ---
-GET | Retrieve record(s)
-POST | Insert new record in the collection
-PUT | Modify a record
-DELETE | Delete record(s)
+Method | Description | Access Control
+--- | --- | ---
+GET | Retrieve record(s) | Usually public
+POST | Insert new record in the collection | Requires authentication
+PUT | Modify a record | Requires authentication
+DELETE | Delete record(s) | Requires authentication
 
 ## Reference
 
