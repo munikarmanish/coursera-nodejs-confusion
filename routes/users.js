@@ -15,12 +15,24 @@ router.get('/', function(req, res) {
 
 router.post('/signup', (req, res) => {
     const { username, password } = req.body;
-    User.register(new User({ username }), password, err => {
+    User.register(new User({ username }), password, (err, user) => {
         if (err) {
             res.status(500).json({ err });
         } else {
-            passport.authenticate('local')(req, res, () => {
-                res.json({ success: true, status: 'Registration successful' });
+            if (req.body.firstname) {
+                user.firstname = req.body.firstname;
+            }
+            if (req.body.lastname) {
+                user.lastname = req.body.lastname;
+            }
+            user.save(err => {
+                if (err) {
+                    res.status(500).json({ err });
+                } else {
+                    passport.authenticate('local')(req, res, () => {
+                        res.json({ success: true, status: 'Registration successful' });
+                    });
+                }
             });
         }
     });

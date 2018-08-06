@@ -11,6 +11,7 @@ dishRouter.use(bodyParser.json());
 dishRouter.route('/')
     .get((req, res, next) => {
         Dishes.find({})
+            .populate('comments.author')
             .then(dishes => res.json(dishes), err => next(err))
             .catch(err => next(err));
     })
@@ -31,6 +32,7 @@ dishRouter.route('/')
 dishRouter.route('/:dishId')
     .get((req, res, next) => {
         Dishes.findById(req.params.dishId)
+            .populate('comments.author')
             .then(dish => res.json(dish), err => next(err))
             .catch(err => next(err));
     })
@@ -51,6 +53,7 @@ dishRouter.route('/:dishId')
 dishRouter.route('/:dishId/comments')
     .get((req, res, next) => {
         Dishes.findById(req.params.dishId)
+            .populate('comments.author')
             .then(dish => {
                 if (dish) {
                     res.json(dish.comments);
@@ -66,6 +69,7 @@ dishRouter.route('/:dishId/comments')
         Dishes.findById(req.params.dishId)
             .then(dish => {
                 if (dish) {
+                    req.body.author = req.user._id;
                     dish.comments.push(req.body);
                     dish.save()
                         .then(dish => res.json(dish))
@@ -101,6 +105,7 @@ dishRouter.route('/:dishId/comments')
 dishRouter.route('/:dishId/comments/:commentId')
     .get((req, res, next) => {
         Dishes.findById(req.params.dishId)
+            .populate('comments.author')
             .then(dish => {
                 if (!dish) {
                     const err = new Error(`Dish ${req.params.dishId} not found`);
