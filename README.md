@@ -66,6 +66,7 @@ Endpoint | Supported methods
 `/promotions/<promoId>` | GET, PUT, DELETE
 `/leader` | GET, POST, DELETE
 `/leader/<leaderId>` | GET, PUT, DELETE
+`/users` | GET
 
 ### Method documentation
 
