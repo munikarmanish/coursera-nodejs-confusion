@@ -20,6 +20,16 @@ mongoose.connect(config.mongoUrl, { useNewUrlParser: true })
 
 const app = express();
 
+// redirect all request to https
+app.all('*', (req, res, next) => {
+    if (req.secure) {
+        return next();
+    } else {
+        const url = 'https://' + req.host + ':' + app.get('secPort') + req.url
+        res.redirect(307, url);
+    }
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
